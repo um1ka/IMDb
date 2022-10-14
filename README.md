@@ -12,7 +12,7 @@ Conncet it to style.css and scrript.js fileas and give a style to it.
 Connect API to html on script.js file.
 
 
-
-https://trello.com/b/gv8jmlgi/imdb
+Wireframe: https://wireframe.cc/pro/edit/590407
+Trello Board: https://trello.com/b/gv8jmlgi/imdb
 
 
