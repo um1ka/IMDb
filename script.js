@@ -40,6 +40,9 @@ const options = {
 	}
 };
 
+//async function getData (event) {
+//event.preventDefault()
+//let textInput = document.querySelector("#input").value 
 fetch('https://online-movie-database.p.rapidapi.com/auto-complete?q=tourist', options)
 	.then(response => response.json())
     .then(data => {
@@ -58,16 +61,29 @@ fetch('https://online-movie-database.p.rapidapi.com/auto-complete?q=tourist', op
 	.then(response => console.log(response))
 	.catch(err => console.error(err));
     
-    // const option = {
-    //     method: 'GET',
-    //     headers: {
-    //         'X-RapidAPI-Key': '6534f8d41bmshc365272f6276afdp1cd116jsn007772c79a91',
-    //         'X-RapidAPI-Host': 'online-movie-database.p.rapidapi.com'
-    //     }
-    // };
+    const option = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': '6534f8d41bmshc365272f6276afdp1cd116jsn007772c79a91',
+            'X-RapidAPI-Host': 'online-movie-database.p.rapidapi.com'
+        }
+    };
     
-    // fetch('https://online-movie-database.p.rapidapi.com/title/get-videos?tconst=tt0944947&limit=25&region=US', option)
-    //     .then(response => response.json())
+    fetch('https://online-movie-database.p.rapidapi.com/title/get-videos?tconst=tt0944947&limit=25&region=US', option)
+        .then(response => response.json())
+        .then(data => {
+            const newList = data.resource.videos;
+            console.log(newList)
+            newList.map((item) => {
+                const video = item.image;
+                const movie = `<li><h4>${video}</h4></li>`
+                document.querySelector('.video_').innerHTML += movie;
+            })
+        })
+
+        .then(response => console.log(response))
+        .catch(err => console.error(err));
+
+       // button.addEventListener("click", data)
         
-    //     .then(response => console.log(response))
-    //     .catch(err => console.error(err));
+
