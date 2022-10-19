@@ -1,10 +1,10 @@
 //1st MovieCard API ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 let button = document.querySelector("#button");
-
+let movieIds = []
 async function getMovie(event) {
   event.preventDefault();
-  
+  movieIds = []
   let input = document.querySelector("#input").value;
 
   const options = {
@@ -37,14 +37,22 @@ async function getMovie(event) {
         const id = item.id;
         const trailerId = item.id.split("").splice(7, 9).join("");
         console.log(trailerId);
+        movieIds.push(trailerId)
         
 
-        const newList = `<li> <h1>"${name}"</h1><img class="img" src="${image}"><h2>${time} Minutes</h2><h2>Year: ${year}</h2><h3>${actor} and ${actor2}</h3><p class="movieId">${id}</p>`;
+        const newList = `<li> <img class="img" src="${image}"> <h1>"${name}"</h1> <h2>${time} Minutes</h2><h2>Year: ${year}</h2><h3>${actor} and ${actor2}</h3><p class="movieId">${id}</p>`;
         document.querySelector(".video_").innerHTML += newList;
         document.querySelector(".img").addEventListener(
           "click", function(){
               getTrailer(trailerId)
           });
+          const imgs = document.querySelectorAll(".img")
+          imgs.forEach((img, i) =>{
+              img.addEventListener(
+                "click", function(){
+                    getTrailer(movieIds[i])
+                })
+          })
         //   const img = document.getElementById(`img${i}`)
         //   console.log(img)
         //   img.addEventListener(
