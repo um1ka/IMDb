@@ -1,101 +1,77 @@
-       //1st MovieCard API //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+//1st MovieCard API ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-       let button = document.querySelector('#button')
+let button = document.querySelector("#button");
 
-        async function getMovie (event) {
-            event.preventDefault()
-            
-            let input = document.querySelector('#input').value
-            
+async function getMovie(event) {
+  event.preventDefault();
+  
+  let input = document.querySelector("#input").value;
 
+  const options = {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key": "6534f8d41bmshc365272f6276afdp1cd116jsn007772c79a91",
+      "X-RapidAPI-Host": "online-movie-database.p.rapidapi.com",
+    },
+  };
 
-            const options = {
-                method: 'GET',
-                headers: {
-                    'X-RapidAPI-Key': '6534f8d41bmshc365272f6276afdp1cd116jsn007772c79a91',
-                    'X-RapidAPI-Host': 'online-movie-database.p.rapidapi.com'
-                }
-            };
-            
-            fetch(`https://online-movie-database.p.rapidapi.com/title/find?q=${input}`,options)
-            .then(res => {
-                return res.json()
-            })
-            .then(data => {
-                    const movieList = data.results;
-
-                    movieList.map((item) => {
-                        console.log(item)
-                        const name = item.title;
-                        const image = item.image.url;
-                        const time = item.runningTimeInMinutes;
-                        const year = item.year;
-                        const id = item.id;
-                        const trailerId = item.id.split("").splice(7,9).join("")
-                        console.log(trailerId)
-                        const newList = `<li> <h1>"${name}"</h1><img class="img" src="${image}"><h2>${time} Minutes</h2><h2>Year: ${year}</h2><p class="movieId">${id}</p>`
-                        document.querySelector('.video_').innerHTML += newList;
-                        document.querySelector('.img').addEventListener("click",  
-                        function(){
-                            getTrailer(id)
-                            console.log("working")
-                        })
-                    })
-                        console.log(movieList)
-                })
-                
-            .catch(err => {
-                console.log("error!", err)
-            })
-        }
-        button.addEventListener("click", getMovie)
-
-
-
-    
-
+  fetch(
+    `https://online-movie-database.p.rapidapi.com/title/find?q=${input}`,
+    options
+  )
+    .then((res) => {
+      return res.json();
+      
+    })
+    .then((data) => {
+      const movieList = data.results;
        
-            
-  //2nd Trailer API ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+      movieList.map((item, i) => {
+        console.log(item);
+        const name = item.title;
+        const image = item.image.url;
+        const time = item.runningTimeInMinutes;
+        const year = item.year;
+        const actor = item.principals[0].name;
+        const actor2 = item.principals[1].name;
+        const id = item.id;
+        const trailerId = item.id.split("").splice(7, 9).join("");
+        console.log(trailerId);
         
-  async function getTrailer (event , id) {
-    // event.preventDefault()
-        const options = {
-            method: 'GET',
-            headers: {
-                'X-RapidAPI-Key': '6534f8d41bmshc365272f6276afdp1cd116jsn007772c79a91',
-                'X-RapidAPI-Host': 'online-movie-database.p.rapidapi.com'
-            }
-        };
-        
-        fetch('https://online-movie-database.p.rapidapi.com/title/get-video-playback?viconst=vi1015463705', options)
-        .then(res => {
-            return res.json()
-        })
-            .then(data => {
-                const video = data.resource.encodings;
-                console.log(video)
-              
-                document.querySelector(".trailer").innerHTML = `<iframe src="${video[3].playUrl}"></iframe>`
-                // video.map((item) =>{
-                //     const trailers = item.playUrl;
-                //     const newVideo = `<iframe src="${trailers}"></iframe>`
-                    
-                // })
 
-                console.log(video)
-            })
-         
-            .then(res => console.log(res))
-            .catch(err => console.error(err));
-    }
+        const newList = `<li> <h1>"${name}"</h1><img class="img" src="${image}"><h2>${time} Minutes</h2><h2>Year: ${year}</h2><h3>${actor} and ${actor2}</h3><p class="movieId">${id}</p>`;
+        document.querySelector(".video_").innerHTML += newList;
+        document.querySelector(".img").addEventListener(
+          "click", function(){
+              getTrailer(trailerId)
+          });
+        //   const img = document.getElementById(`img${i}`)
+        //   console.log(img)
+        //   img.addEventListener(
+        //     "click", function(){
+        //         console.log("hello")
+        //         getTrailer(trailerId)
+        //     });
+      
+        // document.querySelector(".img").addEventListener(
+        //     "click", function(){
+        //         getTrailerId(trailerId)
+        //     });
+        }) 
+       
 
-    //3rd MovieInfo API //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+      console.log(movieList);
+    })
 
+    .catch((err) => {
+      console.log("error!", err);
+    });
+}
+button.addEventListener("click", getMovie);
 
-    async function getOtherInfo (event) {
-        event.preventDefault()
-
+//2nd Trailer API ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+async function getTrailerId(id){
+    
     const options = {
         method: 'GET',
         headers: {
@@ -103,23 +79,90 @@
             'X-RapidAPI-Host': 'online-movie-database.p.rapidapi.com'
         }
     };
-    
-    fetch('https://online-movie-database.p.rapidapi.com/title/get-overview-details?tconst=tt0944947&currentCountry=US', options)
-        .then(res => res.json())
-        .then(data =>{
-            const otherInfo = data.plotOutline;
-            console.log(other)
-            otherInfo.map((item) =>{
-                console.log(item)
-            const rate = item.rating;
-            const author  = item.author;
-            const desc = item.text;
-            const categories = `<li> <h3>Rate: ${rate}</h3><h3>Director: ${author}</h3><p>Description: ${desc}</p></li>`
-            document.querySelector(".movieInfo").innerHTML += categories;
-            })
+    let trailerId = null;
+    function idFinder (){ 
+        return fetch(`https://online-movie-database.p.rapidapi.com/title/get-videos?tconst=${id}&limit=25&region=US`, options)
+        .then(response => response.json())
+        .then((response) => {
+            trailerId = response.resource.videos[0].id
+            return trailerId.split("").splice(9).join("")
         })
-        .then(res => console.log(res))
+        // .then(response => console.log(response))
         .catch(err => console.error(err));
-
+       // trailerId = response.resourse.videos[0].id
         
     }
+    return idFinder()
+}
+
+async function getTrailer(id) {
+    // event.preventDefault()
+     let finalId = await getTrailerId(id)
+    console.log(finalId)
+   const options = {
+     method: "GET",
+     headers: {
+       "X-RapidAPI-Key":
+         "6534f8d41bmshc365272f6276afdp1cd116jsn007772c79a91",
+       "X-RapidAPI-Host": "online-movie-database.p.rapidapi.com",
+     },
+   };
+
+   fetch(`https://online-movie-database.p.rapidapi.com/title/get-video-playback?viconst=${finalId}`, options)
+     .then((res) => {
+       return res.json();
+     })
+     .then((data) => {
+       const video = data.resource.encodings;
+       console.log(video);
+
+       document.querySelector(
+         ".trailer"
+       ).innerHTML = `<iframe src="${video[3].playUrl}"></iframe>`;
+       // video.map((item) =>{
+       //     const trailers = item.playUrl;
+       //     const newVideo = `<iframe src="${trailers}"></iframe>`
+
+       // })
+
+       console.log(video);
+     })
+
+    
+     .catch((err) => console.error(err));
+ }
+
+//3rd MovieInfo API ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+async function getOtherInfo(event) {
+  event.preventDefault();
+
+  const options = {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key": "6534f8d41bmshc365272f6276afdp1cd116jsn007772c79a91",
+      "X-RapidAPI-Host": "online-movie-database.p.rapidapi.com",
+    },
+  };
+
+  fetch(
+    "https://online-movie-database.p.rapidapi.com/title/get-overview-details?tconst=tt0944947&currentCountry=US",
+    options
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      const otherInfo = data.plotSummary;
+      console.log(otherInfo)
+      otherInfo.map((item) => {
+        console.log(item);
+        const author = item.author;
+        const desc = item.text;
+        const categories = `<li> <h3>Director: ${author}</h3><p>Description: ${desc}</p></li>`;
+        document.querySelector(".movieInfo").innerHTML += categories;
+      });
+      console.log(otherInfo);
+    })
+    .then((res) => console.log(res))
+    .catch((err) => console.error(err));
+}
+button.addEventListener("click", getOtherInfo);
