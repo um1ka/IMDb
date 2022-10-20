@@ -1,5 +1,4 @@
-//1st MovieCard API ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+//1st MovieCard API 
 let button = document.querySelector("#button");
 let movieIds = []
 async function getMovie(event) {
@@ -41,12 +40,8 @@ async function getMovie(event) {
         
          
 
-        const newList = `<li> <img class="img" src="${image}"> <h1>"${name}"</h1> <h2>${time} Minutes</h2><h2>Year: ${year}</h2><h3>${actor} and ${actor2}</h3><p class="movieId">${id}</p> <button class="details">More Details</button><div class="movieInfo${movieIds[i]}"></div>`;
+        const newList = `<li> <img class="img" src="${image}"> <h1>"${name}"</h1> <p>Time: ${time} mins</p><p>Year: ${year}</p><h3>${actor} and ${actor2}</h3><p class="movieId"></p> <button class="details" class="btn btn-dark">More Details</button><div class="movieInfo${movieIds[i]}"></div>`;
         document.querySelector(".video_").innerHTML += newList;
-        // document.querySelector(".img").addEventListener(
-        //   "click", function(){
-        //       getTrailer(trailerId)
-        //   });
           const imgs = document.querySelectorAll(".img")
           imgs.forEach((img, i) =>{
               img.addEventListener(
@@ -60,19 +55,7 @@ async function getMovie(event) {
 	        getOtherInfo(movieIds[i])
             })
         })
-        //   const img = document.getElementById(`img${i}`)
-        //   console.log(img)
-        //   img.addEventListener(
-        //     "click", function(){
-        //         console.log("hello")
-        //         getTrailer(trailerId)
-        //     });
-      
-        // document.querySelector(".img").addEventListener(
-        //     "click", function(){
-        //         getTrailerId(trailerId)
-        //     });
-        }) 
+     }) 
        
 
       console.log(movieList);
@@ -84,7 +67,7 @@ async function getMovie(event) {
 }
 button.addEventListener("click", getMovie);
 
-//2nd Trailer API ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//2nd Trailer API 
 async function getTrailerId(id){
     
     const options = {
@@ -102,19 +85,16 @@ async function getTrailerId(id){
             trailerId = response.resource.videos[0].id
             return trailerId.split("").splice(9).join("")
         })
-        // .then(response => console.log(response))
         .catch(err => console.error(err));
-       // trailerId = response.resourse.videos[0].id
         
     }
     return idFinder()
 }
 
-async function getTrailer(id) {
-    // event.preventDefault()
-     let finalId = await getTrailerId(id)
+    async function getTrailer(id) {
+    let finalId = await getTrailerId(id)
     console.log(finalId)
-   const options = {
+    const options = {
      method: "GET",
      headers: {
        "X-RapidAPI-Key":
@@ -134,12 +114,6 @@ async function getTrailer(id) {
        document.querySelector(
          ".trailer"
        ).innerHTML = `<iframe src="${video[3].playUrl}"></iframe>`;
-       // video.map((item) =>{
-       //     const trailers = item.playUrl;
-       //     const newVideo = `<iframe src="${trailers}"></iframe>`
-
-       // })
-
        console.log(video);
      })
 
@@ -147,7 +121,7 @@ async function getTrailer(id) {
      .catch((err) => console.error(err));
  }
 
-//3rd MovieInfo API ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//3rd MovieInfo API 
 
 async function getOtherInfo(id) {
   
@@ -170,7 +144,7 @@ async function getOtherInfo(id) {
       console.log(otherInfo)
          const author = otherInfo.author;
          const desc = otherInfo.text;
-         const categories = `<li> <h3>Director: ${author}</h3><p>Description: ${desc}</p></li>`;
+         const categories = ` <h3>Director:  ${author}</h3><p class="text"> ${desc}</p>`;
          document.querySelector(`.movieInfo${id}`).innerHTML += categories;
    
     
