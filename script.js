@@ -39,13 +39,14 @@ async function getMovie(event) {
         console.log(trailerId);
         movieIds.push(trailerId)
         
+         
 
-        const newList = `<li> <img class="img" src="${image}"> <h1>"${name}"</h1> <h2>${time} Minutes</h2><h2>Year: ${year}</h2><h3>${actor} and ${actor2}</h3><p class="movieId">${id}</p>`;
+        const newList = `<li> <img class="img" src="${image}"> <h1>"${name}"</h1> <h2>${time} Minutes</h2><h2>Year: ${year}</h2><h3>${actor} and ${actor2}</h3><p class="movieId">${id}</p> <button class="details">More Details</button><div class="movieInfo${movieIds[i]}"></div>`;
         document.querySelector(".video_").innerHTML += newList;
-        document.querySelector(".img").addEventListener(
-          "click", function(){
-              getTrailer(trailerId)
-          });
+        // document.querySelector(".img").addEventListener(
+        //   "click", function(){
+        //       getTrailer(trailerId)
+        //   });
           const imgs = document.querySelectorAll(".img")
           imgs.forEach((img, i) =>{
               img.addEventListener(
@@ -53,6 +54,12 @@ async function getMovie(event) {
                     getTrailer(movieIds[i])
                 })
           })
+          const detailsBtns = document.querySelectorAll(".details")
+            detailsBtns.forEach((btn, i) => {
+	         btn.addEventListener("click", function(){
+	        getOtherInfo(movieIds[i])
+            })
+        })
         //   const img = document.getElementById(`img${i}`)
         //   console.log(img)
         //   img.addEventListener(
@@ -142,8 +149,8 @@ async function getTrailer(id) {
 
 //3rd MovieInfo API ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-async function getOtherInfo(event) {
-  event.preventDefault();
+async function getOtherInfo(id) {
+  
 
   const options = {
     method: "GET",
@@ -154,23 +161,20 @@ async function getOtherInfo(event) {
   };
 
   fetch(
-    "https://online-movie-database.p.rapidapi.com/title/get-overview-details?tconst=tt0944947&currentCountry=US",
+    `https://online-movie-database.p.rapidapi.com/title/get-overview-details?tconst=${id}&currentCountry=US`,
     options
   )
     .then((res) => res.json())
     .then((data) => {
       const otherInfo = data.plotSummary;
       console.log(otherInfo)
-      otherInfo.map((item) => {
-        console.log(item);
-        const author = item.author;
-        const desc = item.text;
-        const categories = `<li> <h3>Director: ${author}</h3><p>Description: ${desc}</p></li>`;
-        document.querySelector(".movieInfo").innerHTML += categories;
-      });
-      console.log(otherInfo);
+         const author = otherInfo.author;
+         const desc = otherInfo.text;
+         const categories = `<li> <h3>Director: ${author}</h3><p>Description: ${desc}</p></li>`;
+         document.querySelector(`.movieInfo${id}`).innerHTML += categories;
+   
+    
     })
     .then((res) => console.log(res))
     .catch((err) => console.error(err));
 }
-button.addEventListener("click", getOtherInfo);
