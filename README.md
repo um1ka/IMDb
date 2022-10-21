@@ -57,9 +57,9 @@ Updated Wireframe!
 
 https://wireframe.cc/pro/edit/590407
 
-![IMDb Wireframe] (/img/3-New-page1.png alt="wireframe_1")
+![IMDb Wireframe] (/img/3-New-page1.png)
 
-![IMDb Wireframe] (/img/4-New-page2.png alt="wireframe_2")
+![IMDb Wireframe] (/img/4-New-page2.png)
 
 
 # Trello Board
